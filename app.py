@@ -72,7 +72,6 @@ def andaluh_translate(text):
     return requests.get(
         'https://api.andaluh.es/epa',
         params=dict(
-            format='text',
             spanish=text
         )
     ).json()['andaluh']
