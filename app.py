@@ -68,37 +68,17 @@ def load_from_redis(key):
 
 
 @cache.memoize(timeout=86400)
-def google_translate(text, from_, to):
+def andaluh_translate(text):
     return requests.get(
-        'https://www.googleapis.com/language/translate/v2',
+        'https://api.andaluh.es/epa',
         params=dict(
             format='text',
-            key=os.environ['GOOGLE_API_KEY'],
-            q=text,
-            source=from_, target=to
+            spanish=text
         )
-    ).json()['data']['translations'][0]['translatedText']
+    ).json()['andaluh']
 
-
-@cache.memoize(timeout=86400)
-def naver_translate(text, from_, to):
-    response = requests.post(
-        'https://openapi.naver.com/v1/language/translate',
-        data=dict(
-            text=text,
-            source=from_, target=to
-        ),
-        headers={
-            'X-Naver-Client-Id': os.environ['NAVER_CLIENT_ID'],
-            'X-Naver-Client-Secret': os.environ['NAVER_CLIENT_SECRET']
-        }
-    )
-    return response.json()['message']['result']['translatedText']
-
-
-translate_engine = os.environ.get('TRANSLATE_ENGINE', 'google')
 try:
-    translate = globals()[translate_engine + '_translate']
+    translate = andaluh_translate
 except KeyError:
     raise RuntimeError(
         'TRANSLATE_ENGINE: there is no {0!r} translate engine'.format(
@@ -120,8 +100,8 @@ def get_user(user_id):
 
 
 @celery.task()
-def translate_and_send(user_id, user_name, channel_name, text, from_, to):
-    translated = translate(text, from_, to)
+def translate_and_send(user_id, user_name, channel_name, text):
+    translated = translate(text)
     user = get_user(user_id)
 
     for txt in (text, translated):
@@ -139,15 +119,13 @@ def translate_and_send(user_id, user_name, channel_name, text, from_, to):
     return response.text
 
 
-@app.route('/<string:from_>/<string:to>', methods=['GET', 'POST'])
-def index(from_, to):
+@app.route('/andaluh', methods=['GET', 'POST'])
+def index():
     translate_and_send.delay(
         request.values.get('user_id'),
         request.values.get('user_name'),
         request.values.get('channel_name'),
-        request.values.get('text'),
-        from_,
-        to
+        request.values.get('text')
     )
     return 'ok'
 
@@ -171,7 +149,7 @@ def post_to_slack_as_bot(channel_id, text):
 
     return post_to_slack(
         text=text,
-        username='Slack Translator',
+        username='Andaluh for Slack',
         channel=channel_id,
         icon_emoji=':globe_with_meridians:',
     )
