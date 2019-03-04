@@ -127,7 +127,7 @@ def index():
         request.values.get('channel_name'),
         request.values.get('text')
     )
-    return 'ok'
+    return 'Transliterating: ' + request.values.get('text')
 
 
 def post_to_slack(**kwargs):
