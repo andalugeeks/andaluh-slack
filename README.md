@@ -39,6 +39,7 @@ Then add the [Slash Commands](https://api.slack.com/slash-commands)
 
 * Migrate from [Workspace Legacy App](https://api.slack.com/legacy-workspace-apps) to [OAuth authentication](https://api.slack.com/docs/oauth)
 * To implement meeting mode as per the [upstream app](https://github.com/spoqa/slack-translator#meeting-mode)
+* Dockerisation
 
 ## Support
 
