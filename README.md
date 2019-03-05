@@ -1,78 +1,49 @@
-# Slack Translator
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy) [![Build Status](https://travis-ci.org/spoqa/slack-translator.svg)](https://travis-ci.org/spoqa/slack-translator) [![Coverage Status](https://coveralls.io/repos/spoqa/slack-translator/badge.svg?service=github)](https://coveralls.io/github/spoqa/slack-translator)
+# Andaluh Slack Transcriptor
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
-You can translate your chat using slack translator.
+[Workspace Slack App](https://api.slack.com/legacy-workspace-apps) to transliterate español (spanish) spelling to andaluz proposals.
+Based on the work done by [slack-translator](https://github.com/spoqa/slack-translator) app.
 
-<img width="459" alt="2015-11-07 12 19 14" src="https://cloud.githubusercontent.com/assets/276766/11000456/3e07dad4-84e5-11e5-9b51-f777340e4909.png">
+<img width="459" alt="andaluh-slack about" src="https://github.com/andalugeeks/andaluh-slack/raw/master/img/andaluh-slack-application-about.png">
 
+## Table of Contents
 
-## How to Setup
+- [Installation](#installation)
+- [Roadmap](#roadmap)
+- [Support](#support)
+- [Contributing](#contributing)
 
-You need to setup the following [environment variables][2] to integrate
-with [Slack][1]:
+## Installation
 
-- `SLACK_API_TOKEN`: You can get the API Token from [Slack Web API](https://api.slack.com/web)
-- `SLACK_WEBHOOK_URL`: You can get the Incoming Webhook URL from [here](https://services/new/incoming-webhook)
+You need to setup the following [environment variables][2] to integrate with [Slack][1]:
 
-Also, you need to choose a translator vendor to use:
+- `SLACK_API_TOKEN`: You can get the API Token from [Slack Web API](https://api.slack.com/web).
+- `SLACK_WEBHOOK_URL`: You can get the Incoming Webhook URL from [here](https://slack.com/apps/A0F7XDUAZ-incoming-webhooks).
 
-- `TRANSLATE_ENGINE`: The handle name of the translator vendor.  Currently only support `google` and `naver`.  `google` by default.
+<img width="600" alt="andaluh-slack token" src="https://github.com/andalugeeks/andaluh-slack/raw/master/img/andaluh-slack-application-token.png">
+<br>
+<img width="600" alt="andaluh-slack webhook" src="https://github.com/andalugeeks/andaluh-slack/raw/master/img/andaluh-slack-application-webhook.png">
 
-### Google translator
+Then add the [Slash Commands](https://api.slack.com/slash-commands)
 
-If you choose `google` as your `TRANSLATE_ENGINE`, you need to add one more
-environment variable for [Google Translate API][3] as well:
-
-- `GOOGLE_API_KEY`: You can get the API Key from [Google Developers Console](https://console.developers.google.com/)
-
-### Naver translator
-
-If you choose `naver` as your `TRANSLATE_ENGINE`, you need to add two more
-environment variable for [Naver Translator API][4] as well:
-
-- `NAVER_CLIENT_ID`/ `NAVER_CLIENT_SECRET` : You can get the API Key from [Naver Developer Website](https://developers.naver.com/register?defaultScope=translate)
-
-
-Then you can add [Slash Commands](https://api.slack.com/slash-commands) to use
-translator.
-
-1. **Commands:** `/[target language]`
-2. **URL**: `https://[host]/[source language]/[target language]`
+1. **Commands:** `/andaluh`
+2. **URL**: `https://[host]/andaluh`
 3. **Method**: `POST`
 
-For example, if you are using Korean, and you want to add Korean->Japanese
-translation command, try to add Slash command like this.
-
-1. **Commands:** `/ja`
-2. **URL**: `https://[host]/ko/ja`
-3. **Method**: `POST`
-
-## Meeting mode 
-
-Translate every messages in a channel without the need to type in commands with "Meeting Mode". This feature makes uninterrupted flow of communication possible, and integrates into normal conversation smoothly.
-
-To use this feature additional setup is required.
-
-### Installation
-
-You'll need to set up a [Slack App](https://api.slack.com/slack-apps) **in addition to** to setting up slash commands above.
-
-1. Create a [Slack App](https://api.slack.com/apps/)
-1. Set up [Event Subscriptions](https://api.slack.com/events-api) 
-   - Verify url by setting up `Request URL` to `http://[host]/meeting_mode`
-   - example) http://your-app.herokuapp.com/meeting_mode
-   - Subscribe to [message.channels](https://api.slack.com/events/message.channels) event.
-1. Add [Slack Commands](https://api.slack.com/slash-commands) for starting meeting mode.
-    - example) Command to translate every japanese in this channel to korean.
-    - **Commands:** `/会議開始`
-    - **URL:** `http://your-app.herokuapp.com/start_meeting_mode/ja/ko`
-    - example) Command to stop meeting mode in this channel.
-    - **Commands:** `/会議終了`
-    - **URL:** `http://your-app.herokuapp.com/stop_meeting_mode/`
-
+<img width="600" alt="andaluh-slack webhook" src="https://github.com/andalugeeks/andaluh-slack/raw/master/img/andaluh-slack-application-command.png">
 
   [1]: https://www.slack.com/
   [2]: https://en.wikipedia.org/wiki/Environment_variable
-  [3]: https://cloud.google.com/translate/docs
-  [4]: https://developers.naver.com/products/translator
 
+## Roadmap
+
+* Migrate from [Workspace Legacy App](https://api.slack.com/legacy-workspace-apps) to [OAuth authentication](https://api.slack.com/docs/oauth)
+* To implement meeting mode as per the [upstream app](https://github.com/spoqa/slack-translator#meeting-mode)
+
+## Support
+
+Please [open an issue](https://github.com/andalugeeks/andaluh-slack/issues/new) for support.
+
+## Contributing
+
+Please contribute using [Github Flow](https://guides.github.com/introduction/flow/). Create a branch, add commits, and open a pull request.
