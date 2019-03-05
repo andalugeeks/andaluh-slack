@@ -103,30 +103,29 @@ def translate_and_send(user_id, user_name, channel_name, text):
     translated = translate(text)
     user = get_user(user_id)
 
-    for txt in (text, translated):
-        response = requests.post(
-            os.environ['SLACK_WEBHOOK_URL'],
-            json={
-                "username": user_name,
-                "text": txt,
-                "mrkdwn": True,
-                "parse": "full",
-                "channel": '#'+channel_name,
-                "icon_url": user['profile']['image_72']
-            }
-        )
+    response = requests.post(
+        os.environ['SLACK_WEBHOOK_URL'],
+        json={
+            "username": user_name,
+            "text": translated,
+            "mrkdwn": True,
+            "parse": "full",
+            "channel": '#' + channel_name,
+            "icon_url": user['profile']['image_72']
+        }
+    )
     return response.text
 
 
 @app.route('/andaluh', methods=['GET', 'POST'])
 def index():
     translate_and_send.delay(
-        request.values.get('user_id'),
-        request.values.get('user_name'),
-        request.values.get('channel_name'),
-        request.values.get('text')
+        request.values.get('user_id') or request.json['user_id'],
+        request.values.get('user_name') or request.json['user_name'],
+        request.values.get('channel_name') or request.json['channel_name'],
+        request.values.get('text') or request.json['text']
     )
-    return 'Transliterating: ' + request.values.get('text')
+    return 'Transliterating: ' + (request.values.get('text') or request.json['text'])
 
 
 def post_to_slack(**kwargs):
